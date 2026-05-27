@@ -7,11 +7,11 @@ import Checklist from './pages/Checklist'
 import Expense from './pages/Expense'
 
 const PAGE_TITLES = {
-  home: '🇰🇷 釜山旅遊',
-  flight: '✈️ 航班資訊',
-  itinerary: '📅 旅遊行程',
-  checklist: '✅ 行李清單',
-  expense: '💰 旅遊記帳',
+  home:      '釜山旅遊 2026',
+  flight:    '航班資訊',
+  itinerary: '旅遊行程',
+  checklist: '行李清單',
+  expense:   '旅遊記帳',
 }
 
 export default function App() {
@@ -29,21 +29,29 @@ export default function App() {
   }
 
   return (
-    <div className="min-h-screen bg-bg flex justify-center">
+    <div className="min-h-screen flex justify-center" style={{background:'linear-gradient(135deg, #E8F0FF 0%, #F0E8FF 50%, #E8F6FF 100%)'}}>
       <div className="w-full max-w-md flex flex-col relative">
-        {/* Top bar */}
-        <header className="sticky top-0 z-40 bg-bg/90 backdrop-blur-sm border-b border-border px-4 py-3">
-          <h1 className="font-heading font-semibold text-ink text-base text-center tracking-wide">
+        {/* Header */}
+        <header
+          className="sticky top-0 z-40 px-4 py-3"
+          style={{
+            background: 'rgba(255,255,255,0.75)',
+            backdropFilter: 'blur(20px)',
+            WebkitBackdropFilter: 'blur(20px)',
+            borderBottom: '1px solid rgba(255,255,255,0.5)',
+          }}
+        >
+          <h1 className="font-heading font-semibold text-ink text-[15px] text-center tracking-wide">
             {PAGE_TITLES[activePage]}
           </h1>
         </header>
 
-        {/* Page content */}
-        <main className="flex-1 overflow-y-auto px-4 pt-4 pb-24 scrollbar-hide">
+        {/* Content */}
+        <main className="flex-1 overflow-y-auto px-4 pt-4 pb-28 scrollbar-hide">
           {renderPage()}
         </main>
 
-        {/* Bottom navigation */}
+        {/* Floating nav */}
         <BottomNav active={activePage} onChange={setActivePage} />
       </div>
     </div>

@@ -1,5 +1,8 @@
 import { useState, useEffect } from 'react'
+import { RefreshCw } from 'lucide-react'
 import { flights } from '../data/flight'
+
+const SKY_PHOTO = 'https://images.unsplash.com/photo-1436491865332-7a61a109cc05?w=800&q=80'
 
 // ── Status badge ────────────────────────────────────────────────
 const STATUS_CONFIG = {
@@ -91,72 +94,89 @@ function FlightCard({ flight, type, liveData, loading, error }) {
   const status = liveData?.flight_status
 
   return (
-    <div className="bg-white rounded-card shadow-card overflow-hidden">
-      {/* Type label */}
-      <div className={`px-4 py-2 flex items-center justify-between ${
-        type === 'outbound' ? 'bg-primary-light' : 'bg-accent-light'
+    <div
+      className="rounded-card overflow-hidden"
+      style={{
+        background: 'rgba(255,255,255,0.85)',
+        backdropFilter: 'blur(20px)',
+        WebkitBackdropFilter: 'blur(20px)',
+        border: '1px solid rgba(255,255,255,0.7)',
+        boxShadow: '0 4px 24px rgba(79,126,247,0.08)',
+      }}
+    >
+      {/* Label bar */}
+      <div className={`px-4 py-2.5 flex items-center justify-between ${
+        type === 'outbound'
+          ? 'bg-gradient-to-r from-blue-500/10 to-indigo-500/10 border-b border-blue-100/50'
+          : 'bg-gradient-to-r from-pink-500/10 to-rose-500/10 border-b border-pink-100/50'
       }`}>
         <div className="flex items-center gap-2">
-          <span className={`text-xs font-bold ${type === 'outbound' ? 'text-primary' : 'text-accent'}`}>
-            {type === 'outbound' ? '✈️ 去程' : '✈️ 回程'}
+          <span className={`text-xs font-bold ${type === 'outbound' ? 'text-primary' : 'text-pink-500'}`}>
+            {type === 'outbound' ? '去程' : '回程'}
           </span>
           <span className="text-xs text-sub">{depDate}</span>
           {flight.flightNumber && (
-            <span className={`font-mono text-xs font-bold ${type === 'outbound' ? 'text-primary' : 'text-accent'}`}>
+            <span className={`font-mono text-xs font-bold ${type === 'outbound' ? 'text-primary' : 'text-pink-500'}`}>
               {flight.flightNumber}
             </span>
           )}
-          {flight.airline && <span className="text-xs text-sub">{flight.airline}</span>}
+          {flight.airline && <span className="text-[11px] text-sub">{flight.airline}</span>}
         </div>
-        {/* Live status */}
-        {loading && <span className="text-xs text-sub animate-pulse">查詢中…</span>}
+        {loading && <span className="text-[11px] text-sub animate-pulse">查詢中…</span>}
         {!loading && status && <StatusBadge status={status} delay={Math.max(depDelay, arrDelay)} />}
-        {!loading && error && <span className="text-xs text-sub/60">無即時資料</span>}
+        {!loading && !status && !error && <span className="text-[11px] text-sub/50">預定班次</span>}
       </div>
 
-      {/* Flight route */}
-      <div className="p-4">
+      {/* Route */}
+      <div className="px-5 py-4">
         <div className="flex items-center justify-between">
-          {/* Departure */}
+          {/* Dep */}
           <div className="text-left">
-            <div className="text-3xl font-heading font-bold text-ink">{displayDepTime}</div>
+            <div className="text-3xl font-heading font-bold text-ink tabular-nums">{displayDepTime}</div>
             {isLive && liveDepEst && liveDepEst !== liveDepSched && !liveDepAct && (
-              <div className="text-xs text-orange-500 font-medium">預計 {liveDepEst}</div>
+              <div className="text-[11px] text-orange-500 font-medium">預計 {liveDepEst}</div>
             )}
-            {isLive && liveDepAct && <div className="text-xs text-green-600 font-medium">實際 {liveDepAct}</div>}
-            <div className="text-lg font-bold text-primary mt-0.5">{flight.from.code}</div>
-            <div className="text-xs text-sub">{flight.from.city}</div>
+            {isLive && liveDepAct && <div className="text-[11px] text-green-600 font-medium">實際 {liveDepAct}</div>}
+            <div className="text-lg font-heading font-bold text-gradient mt-0.5">{flight.from.code}</div>
+            <div className="text-[11px] text-sub">{flight.from.city}</div>
             {flight.from.terminal && (
-              <div className="text-xs font-medium text-accent mt-1 bg-accent-light px-2 py-0.5 rounded-full inline-block">
+              <span className="inline-block mt-1 text-[11px] font-semibold text-primary bg-primary-light px-2 py-0.5 rounded-full">
                 {flight.from.terminal}
-              </div>
+              </span>
             )}
           </div>
 
           {/* Centre */}
-          <div className="flex flex-col items-center gap-1 flex-1 px-3">
-            <div className={`text-2xl ${isLive && status === 'active' ? 'animate-bounce' : ''}`}>✈️</div>
-            <div className="w-full flex items-center gap-1">
-              <div className="h-px bg-border flex-1" />
-              <div className="text-xs text-sub whitespace-nowrap">直飛</div>
-              <div className="h-px bg-border flex-1" />
+          <div className="flex flex-col items-center gap-1.5 flex-1 px-3">
+            <div
+              className={`w-9 h-9 rounded-full flex items-center justify-center ${
+                isLive && status === 'active' ? 'animate-bounce' : ''
+              }`}
+              style={{background:'linear-gradient(135deg,#4F7EF7,#7C6FCD)', boxShadow:'0 4px 12px rgba(79,126,247,0.3)'}}
+            >
+              <svg width="18" height="18" viewBox="0 0 24 24" fill="white"><path d="M21 16v-2l-8-5V3.5c0-.83-.67-1.5-1.5-1.5S10 2.67 10 3.5V9l-8 5v2l8-2.5V19l-2 1.5V22l3.5-1 3.5 1v-1.5L13 19v-5.5l8 2.5z"/></svg>
             </div>
-            {isLive && <div className="text-[10px] text-primary font-medium">即時</div>}
+            <div className="w-full flex items-center gap-1">
+              <div className="h-px bg-slate-200 flex-1" />
+              <span className="text-[10px] text-sub/60">直飛</span>
+              <div className="h-px bg-slate-200 flex-1" />
+            </div>
+            {isLive && <div className="text-[10px] text-primary font-semibold">即時</div>}
           </div>
 
-          {/* Arrival */}
+          {/* Arr */}
           <div className="text-right">
-            <div className="text-3xl font-heading font-bold text-ink">{displayArrTime}</div>
+            <div className="text-3xl font-heading font-bold text-ink tabular-nums">{displayArrTime}</div>
             {isLive && liveArrEst && liveArrEst !== liveArrSched && !liveArrAct && (
-              <div className="text-xs text-orange-500 font-medium">預計 {liveArrEst}</div>
+              <div className="text-[11px] text-orange-500 font-medium">預計 {liveArrEst}</div>
             )}
-            {isLive && liveArrAct && <div className="text-xs text-green-600 font-medium">實際 {liveArrAct}</div>}
-            <div className="text-lg font-bold text-primary mt-0.5">{flight.to.code}</div>
-            <div className="text-xs text-sub">{flight.to.city}</div>
+            {isLive && liveArrAct && <div className="text-[11px] text-green-600 font-medium">實際 {liveArrAct}</div>}
+            <div className="text-lg font-heading font-bold text-gradient mt-0.5">{flight.to.code}</div>
+            <div className="text-[11px] text-sub">{flight.to.city}</div>
             {flight.to.terminal && (
-              <div className="text-xs font-medium text-accent mt-1 bg-accent-light px-2 py-0.5 rounded-full inline-block">
+              <span className="inline-block mt-1 text-[11px] font-semibold text-pink-500 bg-pink-50 px-2 py-0.5 rounded-full">
                 {flight.to.terminal}
-              </div>
+              </span>
             )}
           </div>
         </div>
@@ -210,32 +230,40 @@ export default function FlightPage() {
 
   return (
     <div className="space-y-4">
-      {/* Countdown */}
-      {countdownTarget && (
-        <div className="bg-primary rounded-card p-5 shadow-card">
-          <Countdown targetDate={countdownTarget} label={countdownLabel} />
-        </div>
-      )}
+      {/* Sky photo hero with countdown overlay */}
+      <div className="relative rounded-card overflow-hidden shadow-glass" style={{minHeight: countdownTarget ? '200px' : '120px'}}>
+        <img src={SKY_PHOTO} alt="sky" className="w-full h-full object-cover absolute inset-0" style={{minHeight: countdownTarget ? '200px' : '120px'}} />
+        <div className="absolute inset-0" style={{background: 'linear-gradient(to bottom, rgba(30,60,120,0.45) 0%, rgba(15,30,80,0.75) 100%)'}} />
 
-      {now > returnArr && (
-        <div className="bg-accent-light rounded-card p-4 text-center text-sm text-sub">
-          🎉 旅程已結束，平安到家！
-        </div>
-      )}
+        {countdownTarget ? (
+          <div className="relative z-10 p-5">
+            <Countdown targetDate={countdownTarget} label={countdownLabel} />
+          </div>
+        ) : now > returnArr ? (
+          <div className="relative z-10 p-5 text-center text-white">
+            <div className="text-2xl mb-1">🎉</div>
+            <div className="font-heading font-bold">旅程圓滿結束，平安到家！</div>
+          </div>
+        ) : (
+          <div className="relative z-10 p-5 text-center text-white">
+            <div className="text-sm font-medium opacity-80">旅程進行中</div>
+          </div>
+        )}
+      </div>
 
       {/* Last updated + refresh */}
-      <div className="flex items-center justify-between">
+      <div className="flex items-center justify-between px-1">
         <span className="text-xs text-sub">
           {lastUpdated
-            ? `即時資料・${lastUpdated.toLocaleTimeString('zh-TW', { hour: '2-digit', minute: '2-digit' })} 更新`
-            : '載入即時資料中…'}
+            ? `即時資料 · ${lastUpdated.toLocaleTimeString('zh-TW', { hour: '2-digit', minute: '2-digit' })} 更新`
+            : '查詢即時資料中…'}
         </span>
         <button
           onClick={fetchLive}
           disabled={loadingState.outbound || loadingState.return}
-          className="text-xs text-primary font-medium flex items-center gap-1 disabled:opacity-50"
+          className="flex items-center gap-1 text-xs text-primary font-medium cursor-pointer disabled:opacity-40"
         >
-          <span className={loadingState.outbound || loadingState.return ? 'animate-spin' : ''}>↻</span>
+          <RefreshCw size={12} strokeWidth={2} className={loadingState.outbound || loadingState.return ? 'animate-spin' : ''} />
           重新整理
         </button>
       </div>
@@ -258,8 +286,7 @@ export default function FlightPage() {
         />
       </div>
 
-      {/* Free plan notice */}
-      <div className="text-xs text-sub/60 text-center px-4">
+      <div className="text-[11px] text-sub/50 text-center">
         資料來源：AviationStack · 免費方案每月 500 次查詢
       </div>
     </div>
