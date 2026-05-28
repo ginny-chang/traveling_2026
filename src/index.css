@@ -1,54 +1,38 @@
-@import url('https://fonts.googleapis.com/css2?family=DM+Sans:wght@400;500;600;700&family=Noto+Sans+KR:wght@300;400;500;700&family=Noto+Sans+TC:wght@300;400;500;700&display=swap');
+@import url('https://fonts.googleapis.com/css2?family=DM+Sans:ital,opsz,wght@0,9..40,300;0,9..40,400;0,9..40,500;0,9..40,700;0,9..40,900;1,9..40,400&family=Public+Sans:wght@300;400;500;600;700&family=Noto+Sans+TC:wght@300;400;500;700&display=swap');
 
 @tailwind base;
 @tailwind components;
 @tailwind utilities;
 
 @layer base {
-  * { -webkit-tap-highlight-color: transparent; box-sizing: border-box; }
+  *, *::before, *::after { box-sizing: border-box; -webkit-tap-highlight-color: transparent; }
+
+  html { background: #fff; }
 
   body {
-    @apply font-sans text-ink;
+    @apply bg-bg text-ink font-sans;
     margin: 0;
     padding: 0;
-    background: linear-gradient(135deg, #E8F0FF 0%, #F0E8FF 50%, #E8F6FF 100%);
-    min-height: 100dvh;
+    background: #ffffff;
     -webkit-font-smoothing: antialiased;
+    -moz-osx-font-smoothing: grayscale;
   }
 
-  #root { @apply min-h-screen; }
+  #root { @apply min-h-screen bg-white; }
 }
 
 @layer utilities {
   .scrollbar-hide { -ms-overflow-style: none; scrollbar-width: none; }
   .scrollbar-hide::-webkit-scrollbar { display: none; }
 
-  .glass {
-    background: rgba(255,255,255,0.75);
-    backdrop-filter: blur(16px);
-    -webkit-backdrop-filter: blur(16px);
-    border: 1px solid rgba(255,255,255,0.6);
+  .font-black-display {
+    font-weight: 900;
+    letter-spacing: -0.04em;
+    line-height: 0.9;
   }
 
-  .glass-strong {
-    background: rgba(255,255,255,0.92);
-    backdrop-filter: blur(24px);
-    -webkit-backdrop-filter: blur(24px);
-    border: 1px solid rgba(255,255,255,0.8);
-  }
-
-  .gradient-primary {
-    background: linear-gradient(135deg, #4F7EF7 0%, #7C6FCD 100%);
-  }
-
-  .gradient-sky {
-    background: linear-gradient(180deg, #87CEEB 0%, #B8D4F0 60%, #E8F4FF 100%);
-  }
-
-  .text-gradient {
-    background: linear-gradient(135deg, #4F7EF7, #7C6FCD);
-    -webkit-background-clip: text;
-    -webkit-text-fill-color: transparent;
-    background-clip: text;
+  /* Airplane window shape */
+  .window-frame {
+    border-radius: 38% 38% 44% 44% / 32% 32% 40% 40%;
   }
 }

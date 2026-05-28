@@ -29,19 +29,12 @@ export default function App() {
   }
 
   return (
-    <div className="min-h-screen flex justify-center" style={{background:'linear-gradient(135deg, #E8F0FF 0%, #F0E8FF 50%, #E8F6FF 100%)'}}>
+    <div className="min-h-screen bg-bg flex justify-center">
       <div className="w-full max-w-md flex flex-col relative">
+
         {/* Header */}
-        <header
-          className="sticky top-0 z-40 px-4 py-3"
-          style={{
-            background: 'rgba(255,255,255,0.75)',
-            backdropFilter: 'blur(20px)',
-            WebkitBackdropFilter: 'blur(20px)',
-            borderBottom: '1px solid rgba(255,255,255,0.5)',
-          }}
-        >
-          <h1 className="font-heading font-semibold text-ink text-[15px] text-center tracking-wide">
+        <header className="sticky top-0 z-40 px-4 py-3 bg-bg border-b border-border">
+          <h1 className="font-heading font-black text-ink text-[13px] text-center tracking-widest uppercase">
             {PAGE_TITLES[activePage]}
           </h1>
         </header>

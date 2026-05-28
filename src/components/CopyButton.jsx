@@ -3,33 +3,20 @@ import { Copy, Check } from 'lucide-react'
 
 export default function CopyButton({ text }) {
   const [copied, setCopied] = useState(false)
-
-  const handleCopy = async () => {
-    try {
-      await navigator.clipboard.writeText(text)
-    } catch {
-      const el = document.createElement('textarea')
-      el.value = text
-      document.body.appendChild(el)
-      el.select()
-      document.execCommand('copy')
-      document.body.removeChild(el)
-    }
+  const handle = async () => {
+    try { await navigator.clipboard.writeText(text) }
+    catch { const e = document.createElement('textarea'); e.value = text; document.body.appendChild(e); e.select(); document.execCommand('copy'); document.body.removeChild(e) }
     setCopied(true)
     setTimeout(() => setCopied(false), 2000)
   }
-
   return (
     <button
-      onClick={handleCopy}
-      className={`inline-flex items-center gap-1 text-xs px-2 py-0.5 rounded-lg border transition-all duration-200 cursor-pointer ${
-        copied
-          ? 'bg-green-50 text-green-600 border-green-200'
-          : 'bg-primary-light text-primary border-blue-100 hover:bg-primary hover:text-white hover:border-primary'
-      }`}
+      onClick={handle}
+      className={`inline-flex items-center gap-1 text-2xs font-bold tracking-wide uppercase px-2 py-1 border transition-colors duration-150 cursor-pointer rounded-badge
+        ${copied ? 'bg-ink text-white border-ink' : 'border-border text-sub hover:border-ink hover:text-ink'}`}
     >
-      {copied ? <Check size={10} strokeWidth={2.5} /> : <Copy size={10} strokeWidth={2} />}
-      <span>{copied ? '已複製' : '複製'}</span>
+      {copied ? <Check size={9} strokeWidth={3} /> : <Copy size={9} strokeWidth={2} />}
+      {copied ? 'COPIED' : 'COPY'}
     </button>
   )
 }

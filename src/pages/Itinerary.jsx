@@ -13,14 +13,13 @@ function getTodayDayKey() {
 export default function Itinerary() {
   const [activeDay, setActiveDay] = useState(getTodayDayKey)
   const day = itinerary[activeDay]
+  const dayIdx = dayKeys.indexOf(activeDay) + 1
 
   return (
     <div className="space-y-4">
+
       {/* Day tabs */}
-      <div
-        className="flex gap-1.5 p-1.5 rounded-2xl"
-        style={{background:'rgba(255,255,255,0.6)', backdropFilter:'blur(12px)', border:'1px solid rgba(255,255,255,0.7)'}}
-      >
+      <div className="grid grid-cols-4 gap-1.5 p-1.5 border border-border rounded-card">
         {dayKeys.map((key) => {
           const d = itinerary[key]
           const isActive = activeDay === key
@@ -28,15 +27,16 @@ export default function Itinerary() {
             <button
               key={key}
               onClick={() => setActiveDay(key)}
-              className="flex-1 py-2 rounded-xl text-xs font-semibold transition-all duration-200 cursor-pointer"
-              style={isActive ? {
-                background: 'linear-gradient(135deg, #4F7EF7 0%, #7C6FCD 100%)',
-                color: 'white',
-                boxShadow: '0 4px 12px rgba(79,126,247,0.3)',
-              } : {color: '#64748B'}}
+              className={`py-2 rounded-badge text-center transition-all duration-150 cursor-pointer
+                ${isActive
+                  ? 'bg-ink text-white'
+                  : 'text-sub hover:text-ink hover:bg-surface'
+                }`}
             >
-              <div>{d.label}</div>
-              <div className={`text-[10px] font-normal mt-0.5 ${isActive ? 'text-white/70' : 'text-slate-400'}`}>
+              <div className={`text-2xs font-bold tracking-wide ${isActive ? 'text-white' : 'text-ink'}`}>
+                {d.label}
+              </div>
+              <div className={`text-[9px] font-mono mt-0.5 ${isActive ? 'text-white/60' : 'text-muted'}`}>
                 {d.date.slice(5).replace('-', '/')}
               </div>
             </button>
@@ -45,35 +45,39 @@ export default function Itinerary() {
       </div>
 
       {/* Day header */}
-      <div className="flex items-center gap-3 px-1">
-        <div
-          className="w-10 h-10 rounded-2xl flex items-center justify-center text-white font-heading font-bold text-sm flex-shrink-0"
-          style={{background:'linear-gradient(135deg, #4F7EF7 0%, #7C6FCD 100%)', boxShadow:'0 4px 12px rgba(79,126,247,0.3)'}}
-        >
-          D{dayKeys.indexOf(activeDay) + 1}
+      <div className="flex items-center gap-3">
+        <div className="w-9 h-9 border-2 border-ink rounded-badge flex items-center justify-center flex-shrink-0">
+          <span className="font-mono font-black text-ink text-xs">D{dayIdx}</span>
         </div>
         <div>
-          <div className="font-heading font-bold text-ink text-sm">{day.subtitle}</div>
-          <div className="text-[11px] text-sub">
-            {new Date(day.date + 'T12:00:00').toLocaleDateString('zh-TW', { year: 'numeric', month: 'long', day: 'numeric', weekday: 'short' })}
+          <div className="font-heading font-bold text-ink text-sm leading-tight">{day.subtitle}</div>
+          <div className="text-2xs font-mono text-muted mt-0.5">
+            {new Date(day.date + 'T12:00:00').toLocaleDateString('zh-TW', {
+              year: 'numeric', month: 'long', day: 'numeric', weekday: 'short',
+            })}
           </div>
         </div>
       </div>
 
+      {/* Divider */}
+      <div className="border-t border-border" />
+
       {/* Timeline */}
       <div className="relative">
-        <div className="absolute left-[17px] top-5 bottom-5 w-px" style={{background:'linear-gradient(to bottom, #4F7EF7, #7C6FCD)'}} />
+        {/* Vertical line */}
+        <div className="absolute left-[14px] top-4 bottom-4 w-px bg-border" />
+
         <div className="space-y-3">
           {day.activities.map((activity, idx) => (
             <div key={activity.id} className="flex gap-3">
               {/* Dot */}
-              <div className="flex-shrink-0 w-9 flex justify-center pt-3.5 z-10">
+              <div className="flex-shrink-0 w-7 flex justify-center pt-3.5 z-10">
                 <div
-                  className="w-2.5 h-2.5 rounded-full"
-                  style={idx === 0
-                    ? {background:'linear-gradient(135deg,#4F7EF7,#7C6FCD)', boxShadow:'0 0 0 3px rgba(79,126,247,0.2)'}
-                    : {background:'white', border:'2px solid #CBD5E1'}
-                  }
+                  className={`rounded-full flex-shrink-0
+                    ${idx === 0
+                      ? 'w-3 h-3 bg-ink'
+                      : 'w-2 h-2 bg-white border-2 border-border mt-0.5'
+                    }`}
                 />
               </div>
               {/* Card */}
